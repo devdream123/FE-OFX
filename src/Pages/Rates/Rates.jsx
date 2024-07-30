@@ -107,7 +107,7 @@ const Rates = () => {
   //Update rate conversion when exchange rate is updated from api
   useEffect(() => {
     handleRateConversion();
-  }, [exchangeRate]);
+  }, [exchangeRate, amountToConvert]);
 
   return (
     <div className={classes.container}>
