@@ -159,7 +159,19 @@ const Rates = () => {
           </div>
         </div>
         {error && <p>{error}</p>}
-        <div>
+
+        {loading && (
+          <div className={classes.loaderWrapper}>
+            <Loader width={"25px"} height={"25px"} />
+          </div>
+        )}
+        <ProgressBar
+          progress={progression}
+          animationClass={loading ? classes.slow : ""}
+          style={{ marginTop: "20px" }}
+        />
+
+        <div className={classes.resultContainer}>
           <TextInput
             label="Amount"
             value={amountToConvert}
@@ -171,17 +183,6 @@ const Rates = () => {
           <p>User receives: {amountWithoutMarkup}</p>
           <p>OFX trades at: {amountWithMarkup} </p>
         </div>
-        <ProgressBar
-          progress={progression}
-          animationClass={loading ? classes.slow : ""}
-          style={{ marginTop: "20px" }}
-        />
-
-        {loading && (
-          <div className={classes.loaderWrapper}>
-            <Loader width={"25px"} height={"25px"} />
-          </div>
-        )}
       </div>
     </div>
   );
