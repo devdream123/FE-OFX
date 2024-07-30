@@ -83,24 +83,31 @@ const Rates = () => {
       return (prevState + deltaTime * 0.0001) % 1;
     });
   });
-
-  const handleRateConversion = (e) => {
+  const handleAmountInput = (e) => {
     const amountInput = Number(e.target.value);
     if (amountInput && !isNaN(amountInput)) {
       setAmountToConvert(Number(amountInput));
-      const amountWithoutMarkup = calculateAmountWithoutMarkup(
-        amountInput,
-        exchangeRate
-      );
-      setAmountWithoutMarkup(amountWithoutMarkup);
-      const amountWithMarkup = calculateAmountWithtMarkup(
-        markupRate,
-        exchangeRate,
-        amountWithoutMarkup
-      );
-      setAmountWithMarkup(amountWithMarkup);
     }
   };
+  const handleRateConversion = () => {
+    const amountWithoutMarkup = calculateAmountWithoutMarkup(
+      amountToConvert,
+      exchangeRate
+    );
+    setAmountWithoutMarkup(amountWithoutMarkup);
+
+    const amountWithMarkup = calculateAmountWithtMarkup(
+      markupRate,
+      exchangeRate,
+      amountWithoutMarkup
+    );
+    setAmountWithMarkup(amountWithMarkup);
+  };
+
+  //Update rate conversion when exchange rate is updated from api
+  useEffect(() => {
+    handleRateConversion();
+  }, [exchangeRate]);
 
   return (
     <div className={classes.container}>
@@ -145,6 +152,7 @@ const Rates = () => {
               }))}
               setSelected={(key) => {
                 setToCurrency(key);
+                handleRateConversion();
               }}
               style={{ marginLeft: "20px" }}
             />
@@ -155,7 +163,10 @@ const Rates = () => {
           <TextInput
             label="Amount"
             value={amountToConvert}
-            onChange={handleRateConversion}
+            onChange={(e) => {
+              handleAmountInput(e);
+              handleRateConversion();
+            }}
           />
           <p>User receives: {amountWithoutMarkup}</p>
           <p>OFX trades at: {amountWithMarkup} </p>
